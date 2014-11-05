@@ -1,45 +1,42 @@
-CC=g++
-CFLAGS=-c -Wall  
-CFLAGSOPT=-O3
-CFLAGTEST=-DTEST_RUN
-LC=g++
+CXX=g++
+CXXFLAGS=-c -Wall  
+CXXFLAGSOPT=-O3
+LD=g++
 RM=rm -f
-LCFLAGS=-pthread
+LDFLAGS=-pthread
 SOURCES= ./src/fibonacci.cpp
 OBJECTS= ./obj/fibonacci.o
+BINARY=./fibonacci
+CXXFLAGTEST=-DTEST_RUN
 OBJTEST=./obj/fibonacci_test.o
 OBJDIR=./obj/
-BINARY=./fibonacci
-INCLUDE=-I../gtest-1.7.0/include
-LIBSPATH=./obj/gtest-all.o
-GTESTSRC=../gtest-1.7.0/src/gtest-all.cc
-GTESTOBJ=./obj/gtest-all.o
-GTSRCINC=-I../gtest-1.7.0/
+LIBSTEST=-lgtest
+GTEST_DIR=../gtest-1.7.0
 
 .PHONY: all
 
 all: build
 
-build:$(OBJDIR) $(OBJECTS) $(GTESTOBJ)
-	 $(LC) $(LCFLAGS) $(LIBSPATH) $(OBJECTS) -o $(BINARY) 
+.PHONY: build
+
+build:$(OBJDIR) $(OBJECTS) 
+	 $(LD) $(LDFLAGS) $(OBJECTS) $(LIBSPATH)  -o $(BINARY) 
 
 $(OBJDIR):
 	mkdir obj
 	
 $(OBJECTS):
-	$(CC) $(CFLAGS) $(CFLAGSOPT) $(INCLUDE) $(SOURCES) -o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(CXXFLAGSOPT) $(INCLUDE) $(SOURCES) -o $(OBJECTS)
 	
-$(GTESTOBJ):
-	$(CC) $(CFLAGS) $(GTSRCINC) $(INCLUDE) $(GTESTSRC) -o $(GTESTOBJ)
-	
-tests: $(OBJTEST) $(GTESTOBJ)
-	$(LC) $(LCFLAGS) $(LIBSPATH) $(OBJTEST) -o $(BINARY)
+.PHONY: tests
+
+tests: $(OBJTEST)
+	$(LD) $(LDFLAGS) $(LIBSTEST) $(OBJTEST) -o $(BINARY)
 	
 $(OBJTEST):
-	$(CC) $(CFLAGS) $(CFLAGTEST) $(INCLUDE) $(SOURCES) -o $(OBJTEST)
-	
+	$(CXX) $(CXXFLAGS) $(CXXFLAGTEST) $(SOURCES) -o $(OBJTEST)
+
+.PHONY: clean
+
 clean:
 	$(RM) $(OBJECTS) $(OBJTEST) $(BINARY)
-
-cleanAll:
-	$(RM) $(OBJECTS) $(OBJTEST) $(BINARY) $(GTESTOBJ)
