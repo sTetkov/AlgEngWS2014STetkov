@@ -23,7 +23,9 @@ int main(int argc, char **argv)
 ///memory usage.
 int fibonacciRet(int n)
 {
+    #ifdef TEST_RUN
     EXPECT_GE(n,0)<< "A negative value" << n << "was passed to fibonacciRet" ;
+    #endif
     if(n<2)
         return n;
     return fibonacciRet(n-1)+fibonacciRet(n-2);
@@ -51,7 +53,9 @@ TEST (FibonacciTest,FibonacciRecursiveFunction)
 ///In this case we usa an array to store all intermediate values used for the calculation.
 int fibonacciArray(int n)
 {
+    #ifdef TEST_RUN
     EXPECT_GE(n,0)<< "A negative value" << n << "was passed to fibonacciArray";
+    #endif
     if(n<2)
         return n;
     int *piVec=new int[n];
@@ -60,7 +64,7 @@ int fibonacciArray(int n)
     for (int i=2;i<n;i++)
         piVec[i]=piVec[i-1]+piVec[i-2];
     int ret=piVec[n-1]+piVec[n-2];
-    delete piVec;
+    delete[] piVec;
     return ret;
 }
 
@@ -85,7 +89,9 @@ TEST (FibonacciTest,FibonacciArrayFunction)
 ///linear runtime and a constant memory usage.
 int fibonacciConst(int n)
 {
+    #ifdef TEST_RUN
     EXPECT_GE(n,0)<< "A negative value" << n << "was passed to fibonacciConst";
+    #endif
     if (n<2)
         return n;
     int fib1=0;
